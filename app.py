@@ -1,3 +1,5 @@
+pip install -r requirements.txt
+uvicorn app:app --host 0.0.0.0 --port 5001
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
