@@ -1,49 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin Address Finder</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { margin-bottom: 20px; }
-        input[type="text"] { padding: 10px; width: 300px; }
-        button { padding: 10px; }
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-        th, td { padding: 10px; text-align: left; border: 1px solid #ccc; }
-    </style>
+    <title>Bitcoin Address Checker</title>
 </head>
 <body>
-    <h1>Bitcoin Address Finder</h1>
+    <h1>Bitcoin Address Checker</h1>
     <form method="POST">
-        <input type="text" name="address" placeholder="Enter Bitcoin address" required>
-        <button type="submit">Search</button>
+        <input type="text" name="address" placeholder="Enter Bitcoin Address" required>
+        <button type="submit">Check</button>
     </form>
-    {% if found_address %}
-        <h2>Result:</h2>
-        <p>Key Hex: <strong>{{ found_address[0] }}</strong></p>
-        <p>Found Address: <strong>{{ found_address[1] }}</strong></p>
-        <p>Balance: <strong>{{ found_address[2] }}</strong></p>
-    {% elif found_address is none %}
-        <h2>No Address Found!</h2>
-    {% endif %}
     
-    <h2>Filtered Addresses with Balance > 0:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Key Hex</th>
-                <th>Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for addr in filtered_addresses %}
-            <tr>
-                <td>{{ addr[0] }}</td>
-                <td>{{ addr[1] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% if found_address %}
+        <h2>Found Address:</h2>
+        <p>Key Hex: {{ found_address[0] }}</p>
+        <p>Address: {{ found_address[1] }}</p>
+        <p>Balance: {{ found_address[2] }}</p>
+    {% endif %}
+    <h2>Filtered Addresses (Non-Zero Balance):</h2>
+    <ul>
+        {% for key_hex, balance in filtered_addresses %}
+            <li>Key Hex: {{ key_hex }}, Balance: {{ balance }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
