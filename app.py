@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 import requests
 from bs4 import BeautifulSoup
 import hashlib
 import base58
-app = Flask(_name_)
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")  # Templates folder
 BASE_URL = "https://hashkeys.space/71/"
 VERSION_MAINNET = b'\x00'
 def generate_p2pkh_address(public_key_hash):
@@ -24,18 +27,27 @@ def scrape_addresses():
             if float(balance) > 0:
                 addresses.append((key_hex, balance))
     return addresses
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    found_address = None
-    if request.method == 'POST':
-        address_to_check = request.form.get('address')
-        addresses = scrape_addresses()
-        for key_hex, balance in addresses:
-            generated_address = generate_p2pkh_address(bytes.fromhex(key_hex))
-            if generated_address == address_to_check:
-                found_address = (key_hex, generated_address, balance)
-                break
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
     filtered_addresses = scrape_addresses()
-    return render_template('index.html', found_address=found_address, filtered_addresses=filtered_addresses)
-if _name_ == '_main_':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "filtered_addresses": filtered_addresses}
+    )
+@app.post("/", response_class=HTMLResponse)
+async def check_address(request: Request, address: str = Form(...)):
+    found_address = None
+    addresses = scrape_addresses()
+    for key_hex, balance in addresses:
+        generated_address = generate_p2pkh_address(bytes.fromhex(key_hex))
+        if generated_address == address:
+            found_address = (key_hex, generated_address, balance)
+            break
+    filtered_addresses = scrape_addresses()
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "found_address": found_address, "filtered_addresses": filtered_addresses}
+    )
+if _name_ == "_main_":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5001)
