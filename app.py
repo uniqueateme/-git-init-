@@ -1,4 +1,4 @@
-pip install Flask aiohttp beautifulsoup4 pandas base58
+!pip install Flask aiohttp beautifulsoup4 pandas base58
 from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
