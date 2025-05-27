@@ -1,4 +1,6 @@
-   beautifulsoup4==4.10.0
-   requests==2.26.0
-   base58==2.1.0
-   
+fastapi==0.103.1
+uvicorn==0.23.2  # ASGI server for FastAPI
+requests==2.31.0
+beautifulsoup4==4.12.2
+pandas==2.0.3
+base58==2.1.1
