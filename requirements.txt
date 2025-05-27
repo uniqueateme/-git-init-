@@ -1,6 +1,7 @@
 fastapi==0.103.1
-uvicorn==0.23.2  # ASGI server for FastAPI
+uvicorn==0.23.2
 requests==2.31.0
 beautifulsoup4==4.12.2
 pandas==2.0.3
 base58==2.1.1
+jinja2==3.1.2  # Add this line
